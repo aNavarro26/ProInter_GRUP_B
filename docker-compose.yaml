@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:13
+    container_name: db_axion
+    environment:  
+      - POSTGRES_DB=AXION_DB
+      - POSTGRES_PASSWORD=PASSWORD123
+      - POSTGRES_USER=AXION_USER
+    ports:
+      - "5434:5432"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_axion
+    ports:
+      - "8083:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: info@axion.cat
+      PGADMIN_DEFAULT_PASSWORD: axion123
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+volumes:
+  local_pgdata:
+  pgadmin-data:
