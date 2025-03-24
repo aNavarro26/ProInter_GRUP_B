@@ -37,17 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "attributes",
     "axion",
     "cart",
-    "cart_item",
-    "categories",
-    "order_item",
     "orders",
-    "productAttributes",
     "products",
-    "role",
-    "shipments",
     "users",
 ]
 
@@ -88,11 +81,11 @@ WSGI_APPLICATION = "axion.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AXION_DB',
-        'USER': 'AXION_USER',
-        'PASSWORD': 'PASSWORD123',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '2027',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 
