@@ -18,5 +18,5 @@ class Order_item:
 
 class Shipment():
     shipment_id = models.AutoField(primary_key=True)
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order_id = models.ForeignKey("orders.Order", on_delete=models.CASCADE)
     shipment_date = models.DateField()
