@@ -10,7 +10,8 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - local_pgdata:/var/lib/postgresql/data
+      - prointer_grup_b_local_pgdata:/var/lib/postgresql/data
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_axion
@@ -20,7 +21,9 @@ services:
       PGADMIN_DEFAULT_EMAIL: info@axion.cat
       PGADMIN_DEFAULT_PASSWORD: axion123
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - prointer_grup_b_pgadmin-data:/var/lib/pgadmin
+
 volumes:
-  local_pgdata:
-  pgadmin-data:
+  prointer_grup_b_local_pgdata:
+  prointer_grup_b_pgadmin-data:
+
