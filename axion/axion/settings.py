@@ -79,13 +79,13 @@ WSGI_APPLICATION = "axion.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '2027',
-        'HOST': 'localhost',
-        'PORT': '5433',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "AXION_DB",
+        "USER": "AXION_USER",
+        "PASSWORD": "PASSWORD123",
+        "HOST": "localhost",
+        "PORT": "5434",
     }
 }
 
