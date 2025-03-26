@@ -1,3 +1,4 @@
 axion\axion\settings.py
 env
 *.pyc
+axion/settings.py
