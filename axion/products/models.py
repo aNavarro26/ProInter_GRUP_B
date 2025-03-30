@@ -28,7 +28,7 @@ class Attribute(models.Model):
 
 
 class ProductAttribute(models.Model):
-    productAttributeID = models.AutoField(primary_key=True)
+    product_attribute_id = models.AutoField(primary_key=True)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     attribute = models.ForeignKey("products.Attribute", on_delete=models.CASCADE)
     value = models.CharField(max_length=200)
