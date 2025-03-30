@@ -14,7 +14,6 @@ cursor = conn.cursor()
 
 
 def insert_csv(csv_file, table_name, columns):
-
     with open(csv_file, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -74,36 +73,44 @@ insert_csv(
 insert_csv(
     csv_file="product_attributes.csv",
     table_name="products_productattribute",
-    columns=["productAttributeID", "product_id", "attribute_id", "value"],
+    columns=["product_attribute_id", "product_id", "attribute_id", "value"],
 )
 
 # 6) CART ITEM
 insert_csv(
     csv_file="cart_item.csv",
     table_name="cart_cartitem",
-    columns=["cart_item_id", "product_id", "quantity", "price", "subtotal"],
+    columns=["cart_item_id", "cart_id", "product_id", "quantity", "price", "subtotal"],
 )
 
 # 7) CART
 insert_csv(
     csv_file="cart.csv",
     table_name="cart_cart",
-    columns=["cart_id", "customer_id", "cart_item_id"],
+    columns=["cart_id", "customer_id"],
 )
 
 # 8) ORDER ITEM
 insert_csv(
     csv_file="order_item.csv",
     table_name="orders_orderitem",
-    columns=["order_item_id", "product_id", "quantity", "price", "subtotal"],
+    columns=[
+        "order_item_id",
+        "order_id",
+        "product_id",
+        "quantity",
+        "price",
+        "subtotal",
+    ],
 )
 
 # 9) ORDERS
 insert_csv(
     csv_file="orders.csv",
     table_name="orders_order",
-    columns=["order_id", "customer_id", "order_date", "order_item_id", "status"],
+    columns=["order_id", "customer_id", "order_date", "status"],
 )
+
 
 # 10) SHIPMENTS
 insert_csv(
