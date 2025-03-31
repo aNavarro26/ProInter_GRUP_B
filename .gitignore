@@ -1,0 +1,3 @@
+env
+*.pyc
+axion/settings.py
