@@ -20,6 +20,8 @@ class Product(models.Model):
     price = models.FloatField()
     stock = models.IntegerField()
     series = models.CharField(max_length=20, choices=SERIES_CHOICES)
+    image_url = models.URLField(max_length=500, blank=True, null=True)
+    rating = models.FloatField(blank=True, null=True)
 
 
 class Attribute(models.Model):
