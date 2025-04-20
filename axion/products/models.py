@@ -16,7 +16,7 @@ class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     category = models.ForeignKey("products.Category", on_delete=models.CASCADE)
-    description = models.CharField(max_length=200, blank=True)
+    description = models.CharField(max_length=800, blank=True)
     price = models.FloatField()
     stock = models.IntegerField()
     series = models.CharField(max_length=20, choices=SERIES_CHOICES)
