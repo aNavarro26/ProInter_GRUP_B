@@ -57,13 +57,20 @@ def user_detail(request, user_id):
 def login_view(request):
     username = request.data.get("username")
     password = request.data.get("password")
-    user = authenticate(request, username=username, password=password)
-    if not user:
-        return Response(
-            {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
-        )
-    login(request, user)
-    return Response({"message": "Login successful"})
+
+    if not username or not password:
+        return Response({"error": "Username and password required"}, status=400)
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({"error": "Invalid credentials"}, status=401)
+
+    if not check_password(password, user.password):
+        return Response({"error": "Invalid credentials"}, status=401)
+
+    request.session["user_id"] = user.user_id
+    return Response({"message": "Login successful", "user_id": user.user_id})
 
 
 @api_view(["POST"])
