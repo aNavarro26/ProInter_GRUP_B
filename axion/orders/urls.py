@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     order_list,
+    order_user_list,
     order_detail,
     order_items_list,
     order_item_detail,
@@ -10,6 +11,7 @@ from .views import (
 
 urlpatterns = [
     path("", order_list, name="order-list"),
+    path("user/<int:user_id>/", order_user_list, name="order-user-list"),
     path("<int:pk>/", order_detail, name="order-detail"),
     path("<int:order_id>/items/", order_items_list, name="order-items-list"),
     path(

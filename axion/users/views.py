@@ -12,7 +12,7 @@ from django.contrib.auth.hashers import check_password, make_password
 @api_view(["GET", "PUT", "DELETE"])
 def user_detail(request, user_id):
     try:
-        user = User.objects.get(pk=user_id)
+        user = User.objects.get(user_id=user_id)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -74,14 +74,48 @@ def login_view(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def logout_view(request):
-    logout(request)
-    return Response({"message": "Logged out"})
+@permission_classes([AllowAny])
+def signup_view(request):
+    username         = request.data.get("username")
+    full_name        = request.data.get("full_name")
+    email            = request.data.get("email")
+    password         = request.data.get("password")
+    confirm_password = request.data.get("confirm_password")
+    address          = request.data.get("address", "")
 
+    # Validaciones básicas
+    if not all([username, full_name, email, password, confirm_password]):
+        return Response(
+            {"error": "Todos los campos (excepto address) son obligatorios."},
+            status=400
+        )
+    if password != confirm_password:
+        return Response(
+            {"error": "Las contraseñas deben coincidir."},
+            status=400
+        )
+    if User.objects.filter(username=username).exists():
+        return Response(
+            {"error": "El nombre de usuario ya está en uso."},
+            status=400
+        )
+    if User.objects.filter(email=email).exists():
+        return Response(
+            {"error": "El correo electrónico ya está registrado."},
+            status=400
+        )
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def me_view(request):
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)
+    # Crear el usuario con role="Customer"
+    customer = User.objects.create(
+        username=username,
+        full_name=full_name,
+        email=email,
+        password=make_password(password),
+        address=address,
+        role="Customer"
+    )
+
+    return Response(
+        {"message": "Usuario creado con éxito.", "user_id": customer.user_id},
+        status=201
+    )
