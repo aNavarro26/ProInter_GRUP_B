@@ -18,6 +18,13 @@ def order_list(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(["GET"])
+def order_user_list(request, user_id):
+    if request.method == "GET":
+        orders = Order.objects.filter(customer=user_id)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
 
 
 @api_view(["GET", "PUT", "DELETE"])
