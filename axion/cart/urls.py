@@ -14,4 +14,6 @@ urlpatterns = [
         views.cart_item_detail,
         name="cart-item-detail",
     ),
+    path("my/", views.my_cart, name="my-cart"),
+    path("my/items/", views.my_cart_items, name="my-cart-items"),
 ]
