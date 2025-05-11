@@ -7,6 +7,8 @@ from .views import (
     order_item_detail,
     shipment_detail,
     shipment_list,
+    update_order_status,
+    process_checkout,
 )
 
 urlpatterns = [
@@ -25,4 +27,6 @@ urlpatterns = [
         shipment_detail,
         name="shipment-detail",
     ),
+    path("<int:order_id>/status/", update_order_status, name="order-update-status"),
+    path("checkout/", process_checkout, name="process-checkout"),
 ]
