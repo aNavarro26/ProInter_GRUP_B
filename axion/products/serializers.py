@@ -27,6 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
     attributes = ProductAttributeSerializer(
         source="productattribute_set", many=True, read_only=True
     )
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -42,3 +43,10 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "attributes",
         ]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        if not request:
+            return []
+        paths = obj.image_url.split(",")
+        return [request.build_absolute_uri(f"/media/{p.strip()}") for p in paths]
