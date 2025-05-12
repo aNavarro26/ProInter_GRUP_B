@@ -172,7 +172,20 @@ def update_order_status(request, order_id):
 
     order.status = new_status
     order.save()
-    serializer = OrderSerializer(order)
+
+    if new_status == "Completed":
+        Shipment.objects.create(order=order, shipment_date=date.today())
+
+        payment_data = request.data.get("payment", {})
+        Payment.objects.create(
+            order=order,
+            method=payment_data.get("method"),
+            card_number=payment_data.get("card_number"),
+            expiry_date=payment_data.get("expiry"),
+            cvv=payment_data.get("cvv"),
+        )
+
+    serializer = OrderSerializer(order, context={"request": request})
     return Response(serializer.data)
 
 

@@ -20,7 +20,7 @@ def cart_list_create(request):
                 {"detail": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = CartSerializer(cart)
+        serializer = CartSerializer(cart, context={"request": request})
         return Response(serializer.data)
 
     user_id = request.data.get("user_id")
@@ -29,7 +29,7 @@ def cart_list_create(request):
 
     data = request.data.copy()
     data["customer"] = user_id
-    serializer = CartSerializer(data=data)
+    serializer = CartSerializer(data=data, context={"request": request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,11 +44,13 @@ def cart_detail(request, cart_id):
         return Response({"detail": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        serializer = CartSerializer(cart)
+        serializer = CartSerializer(cart, context={"request": request})
         return Response(serializer.data)
 
     elif request.method == "PUT":
-        serializer = CartSerializer(cart, data=request.data, partial=True)
+        serializer = CartSerializer(
+            cart, data=request.data, partial=True, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -67,12 +69,12 @@ def cart_items_list_create(request, cart_id):
 
     if request.method == "GET":
         items = cart.items.all()
-        serializer = CartItemSerializer(items, many=True)
+        serializer = CartItemSerializer(items, many=True, context={"request": request})
         return Response(serializer.data)
 
     data = request.data.copy()
     data["cart"] = cart_id
-    serializer = CartItemSerializer(data=data)
+    serializer = CartItemSerializer(data=data, context={"request": request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -96,13 +98,15 @@ def cart_item_detail(request, cart_id, cart_item_id):
         return Response({"detail": "Cart item not found"}, status=404)
 
     if request.method == "GET":
-        serializer = CartItemSerializer(item)
+        serializer = CartItemSerializer(item, context={"request": request})
         return Response(serializer.data)
 
     elif request.method == "PUT":
         data = request.data.copy()
         data["cart"] = cart_id
-        serializer = CartItemSerializer(item, data=data, partial=True)
+        serializer = CartItemSerializer(
+            item, data=data, partial=True, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -123,7 +127,7 @@ def my_cart(request):
     except Cart.DoesNotExist:
         return Response({"detail": "Cart not found"}, status=404)
 
-    serializer = CartSerializer(cart)
+    serializer = CartSerializer(cart, context={"request": request})
     return Response(serializer.data)
 
 
@@ -137,7 +141,7 @@ def my_cart_items(request):
     data = request.data.copy()
     data["cart"] = cart.pk
 
-    serializer = CartItemSerializer(data=data)
+    serializer = CartItemSerializer(data=data, context={"request": request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
