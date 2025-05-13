@@ -24,6 +24,9 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), source="category", write_only=True
+    )
     attributes = ProductAttributeSerializer(
         source="productattribute_set", many=True, read_only=True
     )
@@ -38,15 +41,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "stock",
             "series",
+            "category",  # para GET
+            "category_id",  # para POST/PUT
             "image_url",
             "rating",
-            "category",
             "attributes",
         ]
 
     def get_image_url(self, obj):
         request = self.context.get("request")
-        if not request:
+        if not request or not obj.image_url:
             return []
-        paths = obj.image_url.split(",")
-        return [request.build_absolute_uri(f"/media/{p.strip()}") for p in paths]
+        paths = [p.strip() for p in obj.image_url.split(",") if p.strip()]
+        return [request.build_absolute_uri(f"/media/{p}") for p in paths]
