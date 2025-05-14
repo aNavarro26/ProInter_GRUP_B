@@ -38,8 +38,14 @@ def cart_list_create(request):
 
 @api_view(["GET", "PUT", "DELETE"])
 def cart_detail(request, cart_id):
+    user_id = request.query_params.get("user_id") or request.data.get("user_id")
+    if not user_id:
+        return Response(
+            {"error": "Missing user_id"}, status=status.HTTP_400_BAD_REQUEST
+        )
+
     try:
-        cart = Cart.objects.get(pk=cart_id, customer=request.user)
+        cart = Cart.objects.get(pk=cart_id, customer_id=user_id)
     except Cart.DoesNotExist:
         return Response({"detail": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -47,7 +53,7 @@ def cart_detail(request, cart_id):
         serializer = CartSerializer(cart, context={"request": request})
         return Response(serializer.data)
 
-    elif request.method == "PUT":
+    if request.method == "PUT":
         serializer = CartSerializer(
             cart, data=request.data, partial=True, context={"request": request}
         )
