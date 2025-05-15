@@ -35,9 +35,8 @@ def user_detail(request, user_id):
 
         update_data = request.data.copy()
 
-        new_password = update_data.get("new_password")
-        if new_password:
-            update_data["password"] = make_password(new_password)
+        if "new_password" in update_data:
+            update_data["password"] = update_data.pop("new_password")
 
         serializer = UserSerializer(user, data=update_data, partial=True)
         if serializer.is_valid():
@@ -76,33 +75,26 @@ def login_view(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def signup_view(request):
-    username         = request.data.get("username")
-    full_name        = request.data.get("full_name")
-    email            = request.data.get("email")
-    password         = request.data.get("password")
+    username = request.data.get("username")
+    full_name = request.data.get("full_name")
+    email = request.data.get("email")
+    password = request.data.get("password")
     confirm_password = request.data.get("confirm_password")
-    address          = request.data.get("address", "")
+    address = request.data.get("address", "")
 
     # Validaciones básicas
     if not all([username, full_name, email, password, confirm_password]):
         return Response(
             {"error": "Todos los campos (excepto address) son obligatorios."},
-            status=400
+            status=400,
         )
     if password != confirm_password:
-        return Response(
-            {"error": "Las contraseñas deben coincidir."},
-            status=400
-        )
+        return Response({"error": "Las contraseñas deben coincidir."}, status=400)
     if User.objects.filter(username=username).exists():
-        return Response(
-            {"error": "El nombre de usuario ya está en uso."},
-            status=400
-        )
+        return Response({"error": "El nombre de usuario ya está en uso."}, status=400)
     if User.objects.filter(email=email).exists():
         return Response(
-            {"error": "El correo electrónico ya está registrado."},
-            status=400
+            {"error": "El correo electrónico ya está registrado."}, status=400
         )
 
     # Crear el usuario con role="Customer"
@@ -112,10 +104,10 @@ def signup_view(request):
         email=email,
         password=make_password(password),
         address=address,
-        role="Customer"
+        role="Customer",
     )
 
     return Response(
         {"message": "Usuario creado con éxito.", "user_id": customer.user_id},
-        status=201
+        status=201,
     )
